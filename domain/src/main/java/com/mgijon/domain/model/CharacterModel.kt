@@ -1,7 +1,6 @@
-package com.mgijon.data.model
+package com.mgijon.domain.model
 
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDate
 
 data class CharacterModel(
     @SerializedName("id") val id: Int? = null,

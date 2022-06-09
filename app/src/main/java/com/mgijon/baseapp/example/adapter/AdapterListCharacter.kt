@@ -6,15 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mgijon.baseapp.R
 import com.mgijon.baseapp.databinding.ItemListCharactersBinding
-import com.mgijon.domain.model.Character
+import com.mgijon.data.model.Character
 
-class AdapterListCharacter : RecyclerView.Adapter<ViewHolderListCharacter>() {
+class AdapterListCharacter(private val navigateTo: (id: String) -> Unit) : RecyclerView.Adapter<ViewHolderListCharacter>() {
 
     private val list: MutableList<Character> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderListCharacter {
         val binding = ItemListCharactersBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolderListCharacter(binding)
+        return ViewHolderListCharacter(binding, navigateTo)
     }
 
     override fun onBindViewHolder(holder: ViewHolderListCharacter, position: Int) {
@@ -31,7 +31,7 @@ class AdapterListCharacter : RecyclerView.Adapter<ViewHolderListCharacter>() {
     }
 }
 
-class ViewHolderListCharacter(private val item: ItemListCharactersBinding) : RecyclerView.ViewHolder(item.root) {
+class ViewHolderListCharacter(private val item: ItemListCharactersBinding, private val navigateTo: (id: String) -> Unit) : RecyclerView.ViewHolder(item.root) {
     fun onBind(characterModelUI: Character) {
         item.apply {
             tvName.text = characterModelUI.name
@@ -39,6 +39,9 @@ class ViewHolderListCharacter(private val item: ItemListCharactersBinding) : Rec
                 .load(characterModelUI.image)
                 .placeholder(R.drawable.iron_man)
                 .into(ivCharacter)
+        }
+        item.root.setOnClickListener {
+            navigateTo.invoke(characterModelUI.id)
         }
     }
 }

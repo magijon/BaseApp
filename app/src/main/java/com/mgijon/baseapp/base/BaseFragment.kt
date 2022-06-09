@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
-import com.mgijon.baseapp.example.activity.BaseActivity
-import com.mgijon.baseapp.example.activity.MainActivity
 import com.mgijon.baseapp.example.model.StateBase
-import com.mgijon.domain.common.Resource
+import com.mgijon.baseapp.example.model.TitleFragmentType
 
-abstract class BaseFragment<V : BaseViewModel, B : ViewBinding> : Fragment() {
+abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatActivity>(private val title: Int = TitleFragmentType.NOT_TITLE.value) :
+    Fragment() {
 
     abstract val viewModel: V
     lateinit var binding: B
@@ -33,29 +33,48 @@ abstract class BaseFragment<V : BaseViewModel, B : ViewBinding> : Fragment() {
         initObservers()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (title != TitleFragmentType.NOT_TITLE.value) {
+            setTitle(getString(title))
+        } else {
+            (activity as BaseActivity<*>).hideTitle()
+        }
+    }
+
     protected fun <T : StateBase> runGenericState(state: LiveData<T>, onError: (() -> Unit)? = null, onSuccess: () -> Unit) {
-        state.observe(viewLifecycleOwner){
-            when{
-                it.isLoading -> { showProgress() }
+        state.observe(viewLifecycleOwner) {
+            when {
+                it.isLoading -> {
+                    showProgress()
+                }
                 it.error?.isError == true -> {
                     hideProgress()
-                    onError?.invoke() ?: kotlin.run { showGenericErrorFragment() }}
+                    onError?.invoke() ?: kotlin.run { showGenericErrorFragment() }
+                }
                 else -> {
                     hideProgress()
-                    onSuccess.invoke() }
+                    onSuccess.invoke()
+                }
             }
         }
     }
 
     private fun hideProgress() {
-        (activity as BaseActivity).loading(false)
+        (activity as BaseActivity<*>).loading(false)
     }
 
     private fun showProgress() {
-        (activity as BaseActivity).loading(true)
+        (activity as BaseActivity<*>).loading(true)
     }
 
     private fun showGenericErrorFragment() {
         //TODO
+    }
+
+    fun setTitle(string: String?) {
+        string?.let {
+            (activity as BaseActivity<*>).setTitleStatusBar(it)
+        }
     }
 }

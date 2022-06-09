@@ -9,14 +9,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 
-class GetAllCharactersUseCase @Inject constructor(
+class GetOneCharacterUseCase @Inject constructor(
     private val marvelRepository: MarvelRepository
 ) {
-    operator fun invoke(offset : Long): Flow<Resource<List<Character>>> = flow {
+    operator fun invoke(id : String): Flow<Resource<Character>> = flow {
         try {
             emit(Resource.Loading())
-            val characterDataWrapper = marvelRepository.getAllCharacters(offset)
-            emit(Resource.Success(characterDataWrapper))
+            marvelRepository.getOneCharacter(id)?.let {
+                emit(Resource.Success(it))
+            }
         } catch (e: IOException) {
             emit(Resource.Error("Couldn't reach server. Check your internet connection!"))
         } catch (e: HttpException) {
