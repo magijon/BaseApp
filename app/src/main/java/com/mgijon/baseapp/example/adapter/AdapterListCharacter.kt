@@ -1,5 +1,6 @@
 package com.mgijon.baseapp.example.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,7 @@ class AdapterListCharacter(private val navigateTo: (id: String) -> Unit) : Recyc
     }
 
     override fun onBindViewHolder(holder: ViewHolderListCharacter, position: Int) {
-        holder.onBind(list[position])
+        holder.onBind(list[position], position)
     }
 
     override fun getItemCount(): Int = list.size
@@ -29,12 +30,22 @@ class AdapterListCharacter(private val navigateTo: (id: String) -> Unit) : Recyc
             notifyItemChanged(list.size - 1)
         }
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setCharacters(characters: MutableList<Character>?) {
+        characters?.let {
+            list.clear()
+            list.addAll(characters)
+            notifyDataSetChanged()
+        }
+    }
 }
 
 class ViewHolderListCharacter(private val item: ItemListCharactersBinding, private val navigateTo: (id: String) -> Unit) : RecyclerView.ViewHolder(item.root) {
-    fun onBind(characterModelUI: Character) {
+    fun onBind(characterModelUI: Character, position: Int) {
         item.apply {
             tvName.text = characterModelUI.name
+            tvNumber.text = position.toString()
             Glide.with(item.root.context)
                 .load(characterModelUI.image)
                 .placeholder(R.drawable.iron_man)

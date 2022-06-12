@@ -18,9 +18,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("UNCHECKED_CAST")
 @AndroidEntryPoint
-class ListCharactersFragment : BaseFragment<ListCharactersViewModel, FragmentListCharacterBinding, MainActivity>(R.string.marvel_title) {
+class ListCharactersFragment : BaseFragment<ListCharactersViewModel, FragmentListCharacterBinding, MainActivity>() {
 
     override val viewModel: ListCharactersViewModel by viewModels()
+
+    override val title: Int = R.string.marvel_title
 
     override fun getViewBinding(): FragmentListCharacterBinding = FragmentListCharacterBinding.inflate(layoutInflater)
 
@@ -52,9 +54,16 @@ class ListCharactersFragment : BaseFragment<ListCharactersViewModel, FragmentLis
     }
 
     override fun initObservers() {
-        viewModel.state.let {
-            runGenericState(it) {
-                adapter.updateCharacters((it as LiveData<StateBase.CharacterListState>).value?.characters?.toMutableList())
+        viewModel.apply {
+            stateApi.let {
+                runGenericState(it){
+                    adapter.updateCharacters((it as LiveData<StateBase.CharacterListState>).value?.characters?.toMutableList())
+                }
+            }
+            stateDB.let {
+                runGenericState(it){
+                    adapter.setCharacters((it as LiveData<StateBase.CharacterListState>).value?.characters?.toMutableList())
+                }
             }
         }
     }

@@ -14,16 +14,18 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("UNCHECKED_CAST")
 @AndroidEntryPoint
-class CharacterFragment : BaseFragment<CharacterViewModel, FragmentCharacterBinding, MainActivity>(TitleFragmentType.DYNAMIC_TITLE.value) {
+class CharacterFragment : BaseFragment<CharacterViewModel, FragmentCharacterBinding, MainActivity>() {
 
     override val viewModel: CharacterViewModel by viewModels()
+
+    override val title: Int = TitleFragmentType.DYNAMIC_TITLE.value
 
     override fun getViewBinding(): FragmentCharacterBinding = FragmentCharacterBinding.inflate(layoutInflater)
 
     override fun initViews() {}
 
     override fun initObservers() {
-        viewModel.state.let {
+        viewModel.stateDB.let {
             runGenericState(it) {
                 binding.apply {
                     setTitle((it as LiveData<StateBase.CharacterState>).value?.character?.name)

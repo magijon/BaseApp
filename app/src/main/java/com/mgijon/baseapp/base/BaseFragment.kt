@@ -11,7 +11,7 @@ import androidx.viewbinding.ViewBinding
 import com.mgijon.baseapp.example.model.StateBase
 import com.mgijon.baseapp.example.model.TitleFragmentType
 
-abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatActivity>(private val title: Int = TitleFragmentType.NOT_TITLE.value) :
+abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatActivity> :
     Fragment() {
 
     abstract val viewModel: V
@@ -20,6 +20,8 @@ abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatAct
     abstract fun getViewBinding(): B
     abstract fun initViews()
     abstract fun initObservers()
+
+    open val title: Int = TitleFragmentType.NOT_TITLE.value
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         this.binding = getViewBinding()
@@ -35,10 +37,10 @@ abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatAct
 
     override fun onResume() {
         super.onResume()
-        if (title != TitleFragmentType.NOT_TITLE.value) {
-            setTitle(getString(title))
-        } else {
-            (activity as BaseActivity<*>).hideTitle()
+        when(title) {
+            TitleFragmentType.NOT_TITLE.value -> {(activity as BaseActivity<*>).hideTitle()}
+            TitleFragmentType.DYNAMIC_TITLE.value -> {}
+            else -> {setTitle(getString(title))}
         }
     }
 
