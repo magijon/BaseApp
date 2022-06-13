@@ -1,15 +1,19 @@
 package com.mgijon.baseapp.base
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
 import com.mgijon.baseapp.example.model.StateBase
 import com.mgijon.baseapp.example.model.TitleFragmentType
+
 
 abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatActivity> :
     Fragment() {
@@ -37,10 +41,14 @@ abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatAct
 
     override fun onResume() {
         super.onResume()
-        when(title) {
-            TitleFragmentType.NOT_TITLE.value -> {(activity as BaseActivity<*>).hideTitle()}
+        when (title) {
+            TitleFragmentType.NOT_TITLE.value -> {
+                (activity as BaseActivity<*>).hideTitle()
+            }
             TitleFragmentType.DYNAMIC_TITLE.value -> {}
-            else -> {setTitle(getString(title))}
+            else -> {
+                setTitle(getString(title))
+            }
         }
     }
 
@@ -78,5 +86,13 @@ abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatAct
         string?.let {
             (activity as BaseActivity<*>).setTitleStatusBar(it)
         }
+    }
+
+    internal fun isLoading(): Boolean =
+        viewModel.stateApi.value is StateBase.LoadingStateBase || viewModel.stateDB.value is StateBase.LoadingStateBase
+
+    internal fun hideKeyboard(activity: Activity, view: View) {
+        val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

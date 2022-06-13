@@ -6,24 +6,27 @@ import com.mgijon.data.model.Character
 
 @Entity
 data class CharacterEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey(autoGenerate = true) val key: Int = 0,
+    val id: String,
     val name: String,
     val image: String,
-    val description: String?
+    val description: String?,
+    val visible : Boolean = true
 ) {
     fun characterMapper(): Character = Character(
         id,
         name,
         image,
-        description
+        description,
+        visible
     )
 
-    companion object{
+    companion object {
         fun characterEntityMapper(character: Character): CharacterEntity = CharacterEntity(
-            character.id,
-            character.name,
-            character.image,
-            character.description
+            id = character.id,
+            name = character.name,
+            image = character.image,
+            description = character.description
         )
     }
 }

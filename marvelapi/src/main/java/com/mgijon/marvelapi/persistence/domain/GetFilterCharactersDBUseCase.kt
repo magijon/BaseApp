@@ -8,12 +8,12 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetAllCharactersDBUseCase @Inject constructor(private val characterDao: CharacterDao) {
+class GetFilterCharactersDBUseCase @Inject constructor(private val characterDao: CharacterDao) {
 
-    operator fun invoke(): Flow<Resource<List<Character>>> = flow {
+    operator fun invoke(name : String): Flow<Resource<List<Character>>> = flow {
         try {
             emit(Resource.Loading())
-            val characterDataWrapper = characterDao.getAll().filter { it.visible }.map { it.characterMapper() }
+            val characterDataWrapper = characterDao.getFilter(name).map { it.characterMapper() }
             emit(Resource.Success(characterDataWrapper))
         } catch (e: IOException) {
             emit(Resource.Error("Error getting data from data base"))

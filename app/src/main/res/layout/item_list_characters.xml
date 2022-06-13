@@ -1,64 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivCharacter"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_margin="10dp"
-        android:padding="2dp"
-        tools:src="@drawable/iron_man"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/itemSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/circularShape"
-        app:strokeWidth="2dp"
-        app:strokeColor="@android:color/holo_red_dark"/>
+        app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintStart_toStartOf="@id/tvName"
-        app:layout_constraintBottom_toTopOf="@id/tvName"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:text="1"
-        />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivCharacter"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:padding="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circularShape"
+            app:strokeColor="@android:color/holo_red_dark"
+            app:strokeWidth="2dp"
+            tools:src="@drawable/iron_man" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/ivCharacter"
-        app:layout_constraintTop_toTopOf="@id/ivCharacter"
-        app:layout_constraintBottom_toBottomOf="@id/ivCharacter"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="1"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tvName"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            android:visibility="gone"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@android:color/holo_red_dark"
+            android:fontFamily="@font/marvel_font"
+            android:padding="6dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/ivCharacter"
+            app:layout_constraintStart_toEndOf="@id/ivCharacter"
+            app:layout_constraintTop_toTopOf="@id/ivCharacter"
+            app:textAllCaps="true"
+            tools:text="iron man" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivArrow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_arrow_right"
+            android:tint="@android:color/holo_red_dark"
+            app:layout_constraintBottom_toBottomOf="@id/ivCharacter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivCharacter" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRemove"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:background="@drawable/square_border_shape_holo_red"
+        android:text="@string/btn_remove"
+        android:padding="8dp"
         android:fontFamily="@font/marvel_font"
-        app:textAllCaps="true"
-        tools:text="iron man"
-        android:layout_marginStart="20dp"
-        android:textSize="18sp"
         android:textColor="@color/white"
-        android:padding="6dp"
-        android:background="@android:color/holo_red_dark"
-        />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivArrow"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ivCharacter"
-        app:layout_constraintBottom_toBottomOf="@id/ivCharacter"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/ic_arrow_right"
-        android:tint="@android:color/holo_red_dark"
-        />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
