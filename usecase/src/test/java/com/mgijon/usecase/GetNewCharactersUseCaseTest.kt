@@ -2,14 +2,10 @@ package com.mgijon.usecase
 
 import com.mgijon.domain.common.Resource
 import com.mgijon.domain.model.marvel.Character
-import com.mgijon.usecase.marvel.GetAllCharactersUseCase
-import com.mgijon.usecase.marvel.GetFilterCharacterUseCase
 import com.mgijon.usecase.marvel.GetNewCharactersUseCase
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import java.io.IOException
-import java.lang.RuntimeException
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -25,7 +21,7 @@ class GetNewCharactersUseCaseTest : BaseUseCaseTest<GetNewCharactersUseCase>(::G
     @Test
     fun `verify invoke and loading`() {
         runBlocking {
-            val number : Long = 20
+            val number: Long = 20
             Mockito.`when`(repository.getNewCharacters(number)).thenReturn(listOf(character, character))
 
             var isLoading = false
@@ -48,9 +44,9 @@ class GetNewCharactersUseCaseTest : BaseUseCaseTest<GetNewCharactersUseCase>(::G
     }
 
     @Test
-    fun `error getFilter`() {
+    fun `error getNewCharacters`() {
         runBlocking {
-            val number : Long = 20
+            val number: Long = 20
             Mockito.`when`(repository.getNewCharacters(any())).thenThrow(RuntimeException())
             var message: String? = null
             usecase.invoke(number).collect {

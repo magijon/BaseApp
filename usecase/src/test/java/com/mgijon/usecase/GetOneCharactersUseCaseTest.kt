@@ -49,7 +49,7 @@ class GetOneCharactersUseCaseTest : BaseUseCaseTest<GetOneCharacterUseCase>(::Ge
     }
 
     @Test
-    fun `error getFilter`() {
+    fun `error getOneCharacter`() {
         runBlocking {
             val id = "id"
             Mockito.`when`(repository.getOneCharacter(any())).thenThrow(RuntimeException())
