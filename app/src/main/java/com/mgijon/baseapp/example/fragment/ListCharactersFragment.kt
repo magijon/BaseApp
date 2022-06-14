@@ -13,6 +13,7 @@ import com.mgijon.baseapp.databinding.FragmentListCharacterBinding
 import com.mgijon.baseapp.example.activity.MainActivity
 import com.mgijon.baseapp.example.adapter.AdapterListCharacter
 import com.mgijon.baseapp.example.model.StateBase
+import com.mgijon.baseapp.example.model.StateBase.CharacterListState
 import com.mgijon.baseapp.example.util.ConstantsNavigation.CHARACTER_ID
 import com.mgijon.baseapp.example.util.animateTranslationY
 import com.mgijon.baseapp.example.viewmodel.ListCharactersViewModel
@@ -108,16 +109,17 @@ class ListCharactersFragment : BaseFragment<ListCharactersViewModel, FragmentLis
     }
 
     override fun initObservers() {
-        viewModel.apply {
-            stateApi.let {
-                runGenericState(it) {
-                    adapter.updateCharacters((it as LiveData<StateBase.CharacterListState>).value?.characters?.toMutableList())
-                }
-            }
-            stateDB.let {
-                runGenericState(it) {
-                    adapter.setCharacters((it as LiveData<StateBase.CharacterListState>).value?.characters?.filter { character -> character.visible }
-                        ?.toMutableList())
+        viewModel.state.let {
+            runGenericState(it) {
+                when (it.value) {
+                    is CharacterListState -> {
+                        adapter.setCharacters((it as LiveData<CharacterListState>).value?.characters?.filter { character -> character.visible }
+                            ?.toMutableList())
+                    }
+                    is StateBase.NewCharacterListState -> {
+                        adapter.updateCharacters((it as LiveData<StateBase.NewCharacterListState>).value?.characters?.toMutableList())
+                    }
+                    else -> {}
                 }
             }
         }

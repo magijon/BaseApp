@@ -1,7 +1,7 @@
 package com.mgijon.marvelapi.domain
 
 import com.mgijon.domain.common.Resource
-import com.mgijon.data.model.Character
+import com.mgijon.baseapp.example.model.CharacterUI
 import com.mgijon.marvelapi.repository.MarvelRepository
 import java.io.IOException
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import retrofit2.HttpException
 class GetOneCharacterUseCase @Inject constructor(
     private val marvelRepository: MarvelRepository
 ) {
-    operator fun invoke(id : String): Flow<Resource<Character>> = flow {
+    operator fun invoke(id : String): Flow<Resource<com.mgijon.baseapp.example.model.CharacterUI>> = flow {
         try {
             emit(Resource.Loading())
             marvelRepository.getOneCharacter(id)?.let {

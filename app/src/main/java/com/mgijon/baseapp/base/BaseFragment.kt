@@ -89,7 +89,7 @@ abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatAct
     }
 
     internal fun isLoading(): Boolean =
-        viewModel.stateApi.value is StateBase.LoadingStateBase || viewModel.stateDB.value is StateBase.LoadingStateBase
+        viewModel.state.value is StateBase.LoadingStateBase
 
     internal fun hideKeyboard(activity: Activity, view: View) {
         val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager

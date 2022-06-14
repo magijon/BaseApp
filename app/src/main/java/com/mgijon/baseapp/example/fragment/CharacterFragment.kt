@@ -25,7 +25,7 @@ class CharacterFragment : BaseFragment<CharacterViewModel, FragmentCharacterBind
     override fun initViews() {}
 
     override fun initObservers() {
-        viewModel.stateDB.let {
+        viewModel.state.let {
             runGenericState(it) {
                 binding.apply {
                     setTitle((it as LiveData<StateBase.CharacterState>).value?.character?.name)

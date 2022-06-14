@@ -9,11 +9,11 @@ import com.bumptech.glide.Glide
 import com.mgijon.baseapp.R
 import com.mgijon.baseapp.databinding.ItemListCharactersBinding
 import com.mgijon.baseapp.example.util.animateTranslationX
-import com.mgijon.data.model.Character
+import com.mgijon.baseapp.example.model.CharacterUI
 
 class AdapterListCharacter(private val navigateTo: (id: String) -> Unit, private val remove : (id : String) -> Unit) : RecyclerView.Adapter<ViewHolderListCharacter>() {
 
-    private val list: MutableList<Character> = mutableListOf()
+    private val list: MutableList<CharacterUI> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderListCharacter {
         val binding = ItemListCharactersBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,7 +26,7 @@ class AdapterListCharacter(private val navigateTo: (id: String) -> Unit, private
 
     override fun getItemCount(): Int = list.size
 
-    fun updateCharacters(characters: MutableList<Character>?) {
+    fun updateCharacters(characters: MutableList<CharacterUI>?) {
         characters?.map {
             list.add(it)
             notifyItemChanged(list.size - 1)
@@ -34,7 +34,7 @@ class AdapterListCharacter(private val navigateTo: (id: String) -> Unit, private
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setCharacters(characters: MutableList<Character>?) {
+    fun setCharacters(characters: MutableList<CharacterUI>?) {
         characters?.let {
             list.clear()
             list.addAll(characters)
@@ -49,7 +49,7 @@ class ViewHolderListCharacter(private val item: ItemListCharactersBinding, priva
     private val durationAnimation = 200
 
     @SuppressLint("ClickableViewAccessibility")
-    fun onBind(characterModelUI: Character, position: Int) {
+    fun onBind(characterModelUI: CharacterUI, position: Int) {
         item.apply {
             tvName.text = characterModelUI.name
             tvNumber.text = position.toString()
