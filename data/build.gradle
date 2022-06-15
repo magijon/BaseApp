@@ -33,6 +33,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+        unitTests.returnDefaultValues = false
+    }
 }
 
 dependencies {
@@ -55,4 +62,13 @@ dependencies {
     // Coroutines lifecycle
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+
+    //TEST
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
+    testImplementation "org.mockito:mockito-inline:3.1.0"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0'
+
 }
