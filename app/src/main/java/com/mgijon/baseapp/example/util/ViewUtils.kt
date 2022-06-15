@@ -9,7 +9,7 @@ fun View.visible(){
     this.visibility = View.VISIBLE
 }
 
-fun View.animateTranslationY(duration : Int, destiny : Int = 0){
+fun View.animateTranslationY(duration: Int, destiny: Int = 0){
     this.animate().translationY(destiny.toFloat()).duration = duration.toLong()
 }
 

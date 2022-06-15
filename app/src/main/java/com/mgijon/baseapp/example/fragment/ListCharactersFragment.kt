@@ -36,7 +36,7 @@ class ListCharactersFragment : BaseFragment<ListCharactersViewModel, FragmentLis
 
     private val openDuration = 500
     private val closeDuration = 500
-    private val destiny = 80
+    private val destiny = 130
 
     private val navigateTo: (String) -> Unit = { id ->
         if (!isLoading()) {
@@ -89,8 +89,8 @@ class ListCharactersFragment : BaseFragment<ListCharactersViewModel, FragmentLis
 
     private fun showSearchBar() {
         if (!searchBarisVisible) {
-            binding.lySearch.animateTranslationY(openDuration, destiny)
-            binding.rvCharacters.animateTranslationY(openDuration, destiny)
+            binding.lySearch.animateTranslationY(openDuration, binding.lySearch.height)
+            binding.rvCharacters.animateTranslationY(openDuration, binding.lySearch.height)
             searchBarisVisible = true
         }
     }
