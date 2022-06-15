@@ -12,4 +12,6 @@ This website allows us to register as a user and use the api for free up to 3000
 To make use of the requests it is necessary with our registration in it to obtain the private and public keys, necessary for each request.
 
 ### Screens
-The app displays a list of characters from the Marvel universe.
+The app shows a list of characters from the Marvel universe, which we can select to see their image a little larger and, if it has one, a brief description.
+
+![](https://github.com/magijon/BaseApp/select_one_character.gif)
