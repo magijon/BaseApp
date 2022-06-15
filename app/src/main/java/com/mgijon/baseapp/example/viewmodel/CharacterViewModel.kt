@@ -10,11 +10,15 @@ import com.mgijon.domain.model.marvel.Character
 import com.mgijon.usecase.marvel.GetOneCharacterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class CharacterViewModel @Inject constructor(private val getOneCharacterUseCase: GetOneCharacterUseCase) : BaseViewModel() {
+class CharacterViewModel @Inject constructor(
+    private val getOneCharacterUseCase: GetOneCharacterUseCase,
+    private val dispatcher: CoroutineDispatcher
+) : BaseViewModel() {
 
     override fun startLogic(bundle: Bundle?) {
         bundle?.getString(CHARACTER_ID)?.let {
@@ -23,9 +27,9 @@ class CharacterViewModel @Inject constructor(private val getOneCharacterUseCase:
     }
 
     private fun getCharacter(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             getOneCharacterUseCase(id).collect { result ->
-                val character = result.data ?: Character("","", "", "")
+                val character = result.data ?: Character("", "", "", "")
                 setState(result, StateBase.CharacterState(CharacterUI.mapperCharacterUI(character)))
             }
         }

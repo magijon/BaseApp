@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class GetNewCharactersUseCase @Inject constructor(private val marvelRepository: MarvelRepository) : MarvelBaseUseCase() {
 
-    suspend operator fun invoke(offset: Long): Flow<Resource<List<Character>?>> =
+    operator fun invoke(offset: Long): Flow<Resource<List<Character>?>> =
         getFlow({ Resource.Success(marvelRepository.getNewCharacters(offset)) })
 }
 

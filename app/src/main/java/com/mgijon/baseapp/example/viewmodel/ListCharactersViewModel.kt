@@ -13,6 +13,7 @@ import com.mgijon.usecase.marvel.GetNewCharactersUseCase
 import com.mgijon.usecase.marvel.RemoveVisibilityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -21,7 +22,8 @@ class ListCharactersViewModel @Inject constructor(
     private val getAllCharacterUseCase: GetAllCharactersUseCase,
     private val getFilterCharacterUseCase: GetFilterCharacterUseCase,
     private val removeVisibilityUseCase: RemoveVisibilityUseCase,
-    private val getNewCharactersUseCase: GetNewCharactersUseCase
+    private val getNewCharactersUseCase: GetNewCharactersUseCase,
+    private val dispatcher: CoroutineDispatcher
 ) : BaseViewModel() {
 
     private val characterList: MutableList<CharacterUI> = mutableListOf()
@@ -38,7 +40,7 @@ class ListCharactersViewModel @Inject constructor(
 
     fun getCharacters(firstTime: Boolean = false) {
         if (firstTime) {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(dispatcher) {
                 getAllCharacterUseCase().collect { result ->
                     val list = result.data
                     val characters = list?.map { character -> CharacterUI.mapperCharacterUI(character) }
@@ -57,7 +59,7 @@ class ListCharactersViewModel @Inject constructor(
     }
 
     private fun getRemoteCharacters(characterPosition: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             getNewCharactersUseCase(characterPosition.toLong()).collect { result ->
                 val listData = result.data
                 listData?.let { list ->
@@ -69,7 +71,7 @@ class ListCharactersViewModel @Inject constructor(
     }
 
     fun filterCharacters(name: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             isFilter = name.isNotEmpty()
             getFilterCharacterUseCase.invoke(name).collect { result ->
                 val list = result.data
@@ -80,7 +82,7 @@ class ListCharactersViewModel @Inject constructor(
     }
 
     fun removeVisibility(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             removeVisibilityUseCase.invoke(id).collect { result ->
                 result.data?.let {
                     characterList.clear()
@@ -90,6 +92,8 @@ class ListCharactersViewModel @Inject constructor(
                         characterList.addAll(it)
                     }
                     setState(result, CharacterListState(characters ?: emptyList()))
+                } ?: kotlin.run {
+                    setState(result, CharacterListState(emptyList()))
                 }
             }
         }
