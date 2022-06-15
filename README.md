@@ -15,4 +15,4 @@ To make use of the requests it is necessary with our registration in it to obtai
 The app shows a list of characters from the Marvel universe, which we can select to see their image a little larger and, if it has one, a brief description.
 
 
-<a href="url"><img src="https://github.com/BaseApp/select_one_character.gif" align="center" height="100" width="50" ></a>
+<a href="url"><img src="https://github.com/magijon/BaseApp/blob/master/select_one_character.gif" align="center" height="100" width="50" ></a>
