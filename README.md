@@ -50,9 +50,9 @@ The different modules are:
 
 In this way we will keep the different functions decoupled.
 The design pattern used is MVVM mixed with the MVI to control the different states:
-5. Loading
-6. Success
-7. Error
+1. Loading
+2. Success
+3. Error
 
 For asynchrony, the use of coroutines has been chosen.
 To maintain fluid communication between the request and the emission, **Flow** has been used as a tool within the coroutines, so we do not close the flow, being able to issue different responses to the view, such as the status loading, error or success.
