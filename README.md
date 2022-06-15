@@ -16,3 +16,5 @@ The app shows a list of characters from the Marvel universe, which we can select
 
 
 ![](https://github.com/BaseApp/select_one_character.gif)
+
+<img src="https://github.com/BaseApp/select_one_character.gif" width="250" height="250"/>
