@@ -105,7 +105,7 @@ The images come from the hand of **Glide**. And as mentioned before, using the N
 
 ## Testing
 
-The app has tested the viewmodels, the usecase and the repository. For them, Mockito and Junit have been used. The **coverage** in all tested classes is 100%. And through doing 'collect' in the responses of **flow** we are making the different assertions and call verifications.
+The app has tested the viewmodels, the usecase and the repository. For them, Mockito and Junit have been used.  In addition to the tools provided by **nhaarman** that make it very easy to use mocked objects. The **coverage** in all tested classes is 100%. And through doing 'collect' in the responses of **flow** we are making the different assertions and call verifications.
 As a detail within the test, in order to operate in the same **CorountineScope** as the viewmodel, the dispatcher is injected from a **Hilt** module, so we can put the one we want when creating our fake viewmodel.
 
 ### Other Explanations
