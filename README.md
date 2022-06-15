@@ -14,4 +14,5 @@ To make use of the requests it is necessary with our registration in it to obtai
 ### Screens
 The app shows a list of characters from the Marvel universe, which we can select to see their image a little larger and, if it has one, a brief description.
 
+
 ![](https://github.com/BaseApp/select_one_character.gif)
