@@ -14,7 +14,7 @@ To make use of the requests it is necessary with our registration in it to obtai
 ### Screens
 The app shows a list of characters from the Marvel universe, which we can select to see their image a little larger and, if it has one, a brief description.
 
-![image alt >](https://github.com/magijon/BaseApp/blob/master/select_one_character.gif)
+![image alt ><](https://github.com/magijon/BaseApp/blob/master/select_one_character.gif)
 
 The app obtains a total of  **20** records from the api, but we can add 20 more in each search and store them within it. To do this, simply go down to the last record in the list, pull a little more and release the list, it will notify us with a  **loading** that the list is increasing.
 
