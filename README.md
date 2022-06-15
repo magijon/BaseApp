@@ -38,38 +38,80 @@ We can also remove characters from our list so that they are not loaded again. T
 
 
 
+## Technical details
+
+For the development of the app, a **clean architecture** has been used, structuring said app in different modules with different scopes of vision.
+
+The different modules are:
+1. app
+2. data
+3. domain
+4. usecase
+
+In this way we will keep the different functions decoupled.
+The design pattern used is MVVM mixed with the MVI to control the different states:
+5. Loading
+6. Success
+7. Error
+
+For asynchrony, the use of coroutines has been chosen.
+To maintain fluid communication between the request and the emission, **Flow** has been used as a tool within the coroutines, so we do not close the flow, being able to issue different responses to the view, such as the status loading, error or success.
+
+### App
+
+This module comprises the presentation layer and contains the different views, which in this case are two: **ListViewFragment** and **CharacterFragment**, in addition to the container activity where the navigation graph between fragments is implemented.
+This layer will have access to the necessary frameworks for its correct operation and in turn will have access to the rest of the modules, interacting from its viewmodels with the usecase layer that will return the desired data. For data access we will use the scope of the view, with viewmodelScope we get a CorountineScope.
 
 
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
-|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
-|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
+### Data
+
+It contains the connection **bridge** with the outside and the database. With the use of a repository we access the desired information, taking said information from the **external api** or from the **database** as appropriate. For example, if I want to get a character, I first try to access the database, since access is faster, but if it doesn't find it, I'll launch a request to the api.
+Another example is when obtaining new records, since this can only be done by accessing the external repository, but in the process it must store the new records in the database.
 
 
+### Domain
 
-> You can find more information about **LaTeX** mathematical expressions [here](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference).
+This layer contains the models in an abstract way and the necessary interfaces for communication. This layer, having completely decoupled from the rest, must have an interface that implements the **data** layer so that there is communication but not a dependency from **domain** to **data** making use of dependency inversion.
 
 
+### UseCase
 
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
+Finally, this module will act as a bridge between the **view** layer and the **data** layer. Using the repository provided by data and the **domain** objects and models. In order to be decoupled from **data**, said layer will use the **domain** interface exclusively and not the implementation of **data**.
 
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
-```
 
-And this will produce a flow chart:
+## Tools and Frameworks
 
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
+To compose our app we have made use of a series of tools and frameworks that help us reduce time and facilitate work.
+To maintain the objects between classes without the responsibility of direct injection of the same, it has been decided to use **Hilt** that contains all the advantages of **Dagger** and includes a series of extra tools that save the development of repeat injections. We can indicate entry points and access the different classes in a very clean and clear way.
+For them, some modules have been developed in the different layers, which allow objects to be shared with the different providers.
+
+On the other hand, access to remote information comes from the hand of the **Retrofit** framework, of which we will create an instance in a **Hilt** module to be able to inject it in any part of our app and with the use of the tools that it provides us, we can make requests and save them in data class models.
+
+For information persistence, **Room** has been chosen as the framework. This tool requires the creation of a database, which we will again supply from a **Hilt** module and a so-called **Dao** that contains the input and output requests to the database.
+
+Access to the view data is done using **ViewBinding**, which automatically creates classes for each view .xml file. Thus referencing it, we have access from the corresponding Fragment or Activity class.
+
+The images come from the hand of **Glide**. And as mentioned before, using the Navigation component **Navigation** we can move between fragments by simply designing the graph.
+
+|      Name      | Utility                       |
+|----------------|-------------------------------|
+|Hilt            |`Dependency Inyection`         |
+|Retrofit        |`Http access`                  |
+|Room            |`Persistence information`      |
+|ViewBinding     |`Access to xml components`     |
+|Glide           |`Image processing`             |
+|Navigation      |`Navigation between fragments` |
+
+
+## Testing
+
+The app has tested the viewmodels, the usecase and the repository. For them, Mockito and Junit have been used. The **coverage** in all tested classes is 100%. And through doing 'collect' in the responses of **flow** we are making the different assertions and call verifications.
+As a detail within the test, in order to operate in the same **CorountineScope** as the viewmodel, the dispatcher is injected from a **Hilt** module, so we can put the one we want when creating our fake viewmodel.
+
+### Other Explanations
+
+Add that the app doesn't really delete the references, but it changes the state from visble to invisble within the database and every time the list of characters is supplied, it is filtered by visible.
+
+It was decided to separate **usecase** from **domain** to be clearer, but this could be incorporated inside, since the objects it uses are exclusively from **domain**, but if it needed another bridge due to requirements of the project to another language, it would be easier to change.
+
+On the other hand, the app could continue to grow if, when selecting a character, we obtain more data about it from the api, such as the comics in which it appears or its modifications. The treatment of errors is also pending, although models have been defined, they are not treated for the user.
