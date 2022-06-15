@@ -24,7 +24,7 @@ import org.mockito.kotlin.whenever
 @ExperimentalCoroutinesApi
 class MarvelRepositoryImplTest {
 
-    private lateinit var repository: MarvelRepositoryImpl
+    private lateinit var repository: MarvelRepository
 
     private val initFunc: () -> Unit = {
         whenever(mD5Tool.getHash()).thenReturn("hash")
