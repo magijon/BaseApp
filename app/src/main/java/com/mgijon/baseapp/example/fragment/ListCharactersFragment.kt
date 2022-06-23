@@ -14,6 +14,7 @@ import com.mgijon.baseapp.example.activity.MainActivity
 import com.mgijon.baseapp.example.adapter.AdapterListCharacter
 import com.mgijon.baseapp.example.model.StateBase
 import com.mgijon.baseapp.example.model.StateBase.CharacterListState
+import com.mgijon.baseapp.example.model.StateBase.NewCharacterListState
 import com.mgijon.baseapp.example.util.ConstantsNavigation.CHARACTER_ID
 import com.mgijon.baseapp.example.util.animateTranslationY
 import com.mgijon.baseapp.example.viewmodel.ListCharactersViewModel
@@ -113,11 +114,10 @@ class ListCharactersFragment : BaseFragment<ListCharactersViewModel, FragmentLis
             runGenericState(it) {
                 when (it.value) {
                     is CharacterListState -> {
-                        adapter.setCharacters((it as LiveData<CharacterListState>).value?.characters?.filter { character -> character.visible }
-                            ?.toMutableList())
+                        adapter.setCharacters((it as LiveData<CharacterListState>).value?.characters?.toMutableList())
                     }
-                    is StateBase.NewCharacterListState -> {
-                        adapter.updateCharacters((it as LiveData<StateBase.NewCharacterListState>).value?.characters?.toMutableList())
+                    is NewCharacterListState -> {
+                        adapter.updateCharacters((it as LiveData<NewCharacterListState>).value?.characters?.toMutableList())
                     }
                     else -> {}
                 }

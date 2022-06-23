@@ -6,8 +6,7 @@ data class CharacterUI(
     val id : String,
     val name : String,
     val image : String,
-    val description : String?,
-    val visible : Boolean = true
+    val description : String?
 )
 {
     companion object{
