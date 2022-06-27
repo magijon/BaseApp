@@ -70,7 +70,7 @@ class MarvelRepositoryImplTest {
             whenever(characterDataWrapper.data).thenReturn(characterDataContainer)
             whenever(marvelApi.getAllCharacters(any(), any(), any(), any())).thenReturn(characterDataWrapper)
 
-            val result = repository.getNewCharacters(20)
+            val result = repository.getNewCharacters()
 
             assert(result!![0].id == characterModel.id.toString())
             verify(marvelApi, times(1)).getAllCharacters(any(), any(), any(), any())
@@ -79,9 +79,22 @@ class MarvelRepositoryImplTest {
     }
 
     @Test
-    fun `get one character`() {
+    fun `get one character from Dao`() {
         runTest {
-            whenever(characterDataContainer.results).thenReturn(listOf(characterModel, characterModel, characterModel))
+            whenever(characterDao.getOne("id")).thenReturn(characterEntity)
+
+            val result = repository.getOneCharacter("id")
+
+            assert(result!!.id == characterEntity.id)
+            verify(marvelApi, times(0)).getOneCharacter(any(), any(), any(), any())
+            verify(characterDao, times(1)).getOne(any())
+        }
+    }
+
+    @Test
+    fun `get one character from Api`() {
+        runTest {
+            whenever(characterDataContainer.results).thenReturn(listOf(characterModel))
             whenever(characterDataWrapper.data).thenReturn(characterDataContainer)
             whenever(marvelApi.getOneCharacter(any(), any(), any(), any())).thenReturn(characterDataWrapper)
 
@@ -94,15 +107,35 @@ class MarvelRepositoryImplTest {
     }
 
     @Test
-    fun `get all`() {
+    fun `get all from dao`() {
         runTest {
             whenever(characterDao.getAll())
                 .thenReturn(listOf(characterEntity, characterEntity, CharacterEntity(2, "", "", "", "", false)))
+            whenever(characterDao.countCharacters()).thenReturn(2)
 
             val result = repository.getAll()
 
+            verify(characterDao, times(1)).countCharacters()
             verify(characterDao, times(1)).getAll()
             assert(result.size == 2)
+            assert(result[0].id == characterEntity.id)
+        }
+    }
+
+    @Test
+    fun `get all from api`() {
+        runTest {
+            whenever(characterDataContainer.results).thenReturn(listOf(characterModel, characterModel, characterModel))
+            whenever(characterDataWrapper.data).thenReturn(characterDataContainer)
+            whenever(marvelApi.getAllCharacters(any(), any(), any(), any())).thenReturn(characterDataWrapper)
+            whenever(characterDao.countCharacters()).thenReturn(0)
+
+            val result = repository.getAll()
+
+            verify(characterDao, times(2)).countCharacters()
+            verify(marvelApi, times(1)).getAllCharacters(any(), any(), any(), any())
+            assert(result.size == 3)
+            assert(result[0].id == characterModel.id.toString())
         }
     }
 
@@ -124,12 +157,14 @@ class MarvelRepositoryImplTest {
         runTest {
             whenever(characterDao.getAll())
                 .thenReturn(listOf(characterEntity, characterEntity, CharacterEntity(2, "", "", "", "", false)))
+            whenever(characterDao.countCharacters()).thenReturn(2)
 
             val result = repository.removeVisibility("id")
 
             verify(characterDao, times(1)).getAll()
             verify(characterDao, times(1)).removeVisibility(any())
             assert(result.size == 2)
+            assert(result[0].id == characterEntity.id)
         }
     }
 }

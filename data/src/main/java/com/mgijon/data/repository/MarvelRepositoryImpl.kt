@@ -15,12 +15,12 @@ class MarvelRepositoryImpl @Inject constructor(
     private val characterDao: CharacterDao
 ) : MarvelRepository {
 
-    override suspend fun getNewCharacters(offset: Long): List<Character>? {
+    override suspend fun getNewCharacters(): List<Character>? {
         val newCharacters = marvelApi.getAllCharacters(
             mD5Tool.getPublicKey(),
             mD5Tool.getTs(),
             mD5Tool.getHash(),
-            offset
+            characterDao.countCharacters().toLong()
         ).data?.results
         newCharacters?.map { it.toCharacterEntity() }?.let {
             characterDao.insertAll(it)
@@ -39,7 +39,12 @@ class MarvelRepositoryImpl @Inject constructor(
         ).data?.results?.map { it.toCharacter() }?.get(0)
     }
 
-    override suspend fun getAll(): List<Character> = characterDao.getAll().filter { it.visible }.map { it.toCharacter() }
+    override suspend fun getAll(): List<Character> {
+        return if (characterDao.countCharacters() > 0)
+            characterDao.getAll().filter { it.visible }.map { it.toCharacter() }
+        else
+            getNewCharacters() ?: emptyList()
+    }
 
     override suspend fun getFilter(name: String): List<Character> = characterDao.getFilter(name).filter { it.visible }.map { it.toCharacter() }
 

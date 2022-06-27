@@ -33,7 +33,7 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
         whenever(getAllCharactersUseCase.invoke()).thenReturn(flow)
         whenever(getFilterCharacterUseCase.invoke(any())).thenReturn(flow)
         whenever(removeVisibilityUseCase.invoke(any())).thenReturn(flow)
-        whenever(getNewCharactersUseCase.invoke(any())).thenReturn(flowNull)
+        whenever(getNewCharactersUseCase.invoke()).thenReturn(flowNull)
         viewmodel =
             ListCharactersViewModel(getAllCharactersUseCase, getFilterCharacterUseCase, removeVisibilityUseCase, getNewCharactersUseCase, dispatcher)
     }
@@ -178,7 +178,7 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
     }
 
     @Test
-    fun `get character DB loading`() {
+    fun `start logic loading`() {
         runTest {
             viewmodel.state.observeForever {
                 assert(it is StateBase.LoadingStateBase)
@@ -190,16 +190,17 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
                 }
             }
 
-            viewmodel.getCharacters(true)
+            viewmodel.startLogic(bundle)
 
             verify(getAllCharactersUseCase, times(1)).invoke()
         }
     }
 
     @Test
-    fun `get characters DB success`() {
+    fun `start logic success`() {
         runTest {
             viewmodel.state.observeForever {
+                assert(it is StateBase.CharacterListState)
                 assert((it as StateBase.CharacterListState).characters[0].id == character.id)
             }
 
@@ -209,15 +210,18 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
                 }
             }
 
-            viewmodel.getCharacters(true)
+            viewmodel.startLogic(bundle)
+
+            verify(getAllCharactersUseCase, times(1)).invoke()
         }
     }
 
     @Test
-    fun `get characters DB error`() {
+    fun `start logic error`() {
         runTest {
             val message = "message"
             viewmodel.state.observeForever {
+                assert(it is StateBase.ErrorStateBase)
                 assert((it as StateBase.ErrorStateBase).error?.message == message)
             }
 
@@ -227,7 +231,9 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
                 }
             }
 
-            viewmodel.getCharacters(true)
+            viewmodel.startLogic(bundle)
+
+            verify(getAllCharactersUseCase, times(1)).invoke()
         }
     }
 
@@ -244,9 +250,9 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
                 }
             }
 
-            viewmodel.getCharacters()
+            viewmodel.getNewCharacters()
 
-            verify(getNewCharactersUseCase, times(1)).invoke(any())
+            verify(getNewCharactersUseCase, times(1)).invoke()
         }
     }
 
@@ -254,6 +260,7 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
     fun `get new characters success`() {
         runTest {
             viewmodel.state.observeForever {
+                assert(it is StateBase.NewCharacterListState)
                 assert((it as StateBase.NewCharacterListState).characters[0].id == character.id)
             }
 
@@ -263,7 +270,9 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
                 }
             }
 
-            viewmodel.getCharacters()
+            viewmodel.getNewCharacters()
+
+            verify(getNewCharactersUseCase, times(1)).invoke()
         }
     }
 
@@ -272,6 +281,7 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
         runTest {
             val message = "message"
             viewmodel.state.observeForever {
+                assert(it is StateBase.ErrorStateBase)
                 assert((it as StateBase.ErrorStateBase).error?.message == message)
             }
 
@@ -281,37 +291,9 @@ class ListCharactersViewModelTest : BaseViewModelTest<ListCharactersViewModel>()
                 }
             }
 
-            viewmodel.getCharacters()
-        }
-    }
+            viewmodel.getNewCharacters()
 
-    @Test
-    fun `startlogic with characterList empty`(){
-        runTest {
-            viewmodel.startLogic(bundle)
-
-            verify(getAllCharactersUseCase, times(1)).invoke()
-        }
-    }
-
-    @Test
-    fun `startlogic with characterList full`(){
-        runTest {
-
-            whenever(flow.collect(any())).then {
-                launch {
-                    (it.arguments[0] as FlowCollector<Resource<List<Character>>>).emit(Resource.Success(listOf(character, character, character)))
-                }
-            }
-            viewmodel.removeVisibility("id")
-
-        }.run {
-            viewmodel.state.observeForever {
-                assert(it is StateBase.CharacterListState)
-                assert((it as StateBase.CharacterListState).characters.size == 3)
-            }
-
-            viewmodel.startLogic(bundle)
+            verify(getNewCharactersUseCase, times(1)).invoke()
         }
     }
 }
