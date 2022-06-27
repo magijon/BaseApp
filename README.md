@@ -101,6 +101,7 @@ The images come from the hand of **Glide**. And as mentioned before, using the N
 |ViewBinding     |`Access to xml components`     |
 |Glide           |`Image processing`             |
 |Navigation      |`Navigation between fragments` |
+|Flow            |`Issuance of states`           |
 
 
 ## Testing
