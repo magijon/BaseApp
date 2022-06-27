@@ -110,8 +110,12 @@ As a detail within the test, in order to operate in the same **CorountineScope**
 
 ### Other Explanations
 
+A basic error control has been created that could be extended by each function that uses it, with a default dialog when we cannot access the information. Since there are different types of errors returned by the repository, we can create a process that distinguishes each returned object and displays a custom message for each response.
+
+A component called **RecyclerViewWithSearchBar** has been developed, which can be used anywhere in the app and allows the possibility of passing a series of functions to it for each available event, such as going to the top of the list, moving by it, or by pressing any button on the search bar. The component frees the view from such control, simplifying the use of it to the simplest functions.
+
 Add that the app doesn't really delete the references, but it changes the state from visble to invisble within the database and every time the list of characters is supplied, it is filtered by visible.
 
 It was decided to separate **usecase** from **domain** to be clearer, but this could be incorporated inside, since the objects it uses are exclusively from **domain**, but if it needed another bridge due to requirements of the project to another language, it would be easier to change.
 
-On the other hand, the app could continue to grow if, when selecting a character, we obtain more data about it from the api, such as the comics in which it appears or its modifications. The treatment of errors is also pending, although models have been defined, they are not treated for the user.
+On the other hand, the app could continue to grow if, when selecting a character, we obtain more data about it from the api, such as the comics in which it appears or its modifications.
