@@ -102,6 +102,8 @@ The images come from the hand of **Glide**. And as mentioned before, using the N
 |Glide           |`Image processing`             |
 |Navigation      |`Navigation between fragments` |
 |Flow            |`Issuance of states`           |
+|Mockito         |`Tools for testing`            |
+|Nhaarman        |`Tools for testing`            |
 
 
 ## Testing
