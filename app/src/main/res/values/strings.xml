@@ -5,4 +5,7 @@
     <string name="no_description_body">This reference don´t have a description.</string>
     <string name="hint_edit_text_sear">search</string>
     <string name="btn_remove">remove</string>
+
+    <string name="title_message_error">Error</string>
+    <string name="body_generic_message_error">An error has occurred!</string>
 </resources>

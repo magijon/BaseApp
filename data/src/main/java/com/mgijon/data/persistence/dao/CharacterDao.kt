@@ -23,6 +23,9 @@ interface CharacterDao {
     @Query("UPDATE characterEntity SET visible = 'FALSE' WHERE id = (:characterId) ")
     fun removeVisibility(characterId : String)
 
+    @Query("SELECT COUNT (*) FROM characterEntity")
+    fun countCharacters() : Int
+
     @Insert
     fun insertAll(characterEntity: List<CharacterEntity>)
 

@@ -14,7 +14,6 @@ import com.mgijon.usecase.marvel.RemoveVisibilityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -26,46 +25,26 @@ class ListCharactersViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) : BaseViewModel() {
 
-    private val characterList: MutableList<CharacterUI> = mutableListOf()
     var isFilter = false
 
     override fun startLogic(bundle: Bundle?) {
         isFilter = false
-        if (characterList.isNotEmpty()) {
-            setState(Resource.Success(characterList), CharacterListState(characters = characterList))
-        } else {
-            getCharacters(firstTime = true)
-        }
+        getCharacters()
     }
 
-    fun getCharacters(firstTime: Boolean = false) {
-        if (firstTime) {
-            viewModelScope.launch(dispatcher) {
-                getAllCharacterUseCase().collect { result ->
-                    val list = result.data
-                    val characters = list?.map { character -> CharacterUI.mapperCharacterUI(character) }
-                    characters?.let {
-                        characterList.addAll(it)
-                    }
-                    setState(result, CharacterListState(characters ?: emptyList()))
-                    if (result is Resource.Success && result.data?.isEmpty() == true){
-                        getRemoteCharacters(0)
-                    }
-                }
-            }
-        } else {
-            getRemoteCharacters(characterList.size)
-        }
-    }
-
-    private fun getRemoteCharacters(characterPosition: Int) {
+    private fun getCharacters() {
         viewModelScope.launch(dispatcher) {
-            getNewCharactersUseCase(characterPosition.toLong()).collect { result ->
-                val listData = result.data
-                listData?.let { list ->
-                    list.map { characterList.add(CharacterUI.mapperCharacterUI(it)) }
-                }
-                setState(result, NewCharacterListState(listData?.map { CharacterUI.mapperCharacterUI(it) } ?: emptyList()))
+            getAllCharacterUseCase().collect { result ->
+                val characters = result.data?.map { character -> CharacterUI.mapperCharacterUI(character) }
+                setState(result, CharacterListState(characters ?: emptyList()))
+            }
+        }
+    }
+
+    fun getNewCharacters() {
+        viewModelScope.launch(dispatcher) {
+            getNewCharactersUseCase().collect { result ->
+                setState(result, NewCharacterListState(result.data?.map { CharacterUI.mapperCharacterUI(it) } ?: emptyList()))
             }
         }
     }
@@ -85,12 +64,8 @@ class ListCharactersViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             removeVisibilityUseCase.invoke(id).collect { result ->
                 result.data?.let {
-                    characterList.clear()
                     val list = result.data
                     val characters = list?.map { character -> CharacterUI.mapperCharacterUI(character) }
-                    characters?.let {
-                        characterList.addAll(it)
-                    }
                     setState(result, CharacterListState(characters ?: emptyList()))
                 } ?: kotlin.run {
                     setState(result, CharacterListState(emptyList()))

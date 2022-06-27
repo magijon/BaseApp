@@ -21,12 +21,11 @@ class GetNewCharactersUseCaseTest : BaseUseCaseTest<GetNewCharactersUseCase>(::G
     @Test
     fun `verify invoke and loading`() {
         runBlocking {
-            val number: Long = 20
-            Mockito.`when`(repository.getNewCharacters(number)).thenReturn(listOf(character, character))
+            Mockito.`when`(repository.getNewCharacters()).thenReturn(listOf(character, character))
 
             var isLoading = false
             var data: List<Character>? = listOf()
-            usecase.invoke(number).collect {
+            usecase.invoke().collect {
                 when (it) {
                     is Resource.Loading -> {
                         isLoading = true
@@ -39,7 +38,7 @@ class GetNewCharactersUseCaseTest : BaseUseCaseTest<GetNewCharactersUseCase>(::G
                 assert(isLoading)
             }
             assert(data!![0] == character)
-            verify(repository, times(1)).getNewCharacters(any())
+            verify(repository, times(1)).getNewCharacters()
         }
     }
 
@@ -47,9 +46,9 @@ class GetNewCharactersUseCaseTest : BaseUseCaseTest<GetNewCharactersUseCase>(::G
     fun `error getNewCharacters`() {
         runBlocking {
             val number: Long = 20
-            Mockito.`when`(repository.getNewCharacters(any())).thenThrow(RuntimeException())
+            Mockito.`when`(repository.getNewCharacters()).thenThrow(RuntimeException())
             var message: String? = null
-            usecase.invoke(number).collect {
+            usecase.invoke().collect {
                 when (it) {
                     is Resource.Error -> {
                         message = it.message

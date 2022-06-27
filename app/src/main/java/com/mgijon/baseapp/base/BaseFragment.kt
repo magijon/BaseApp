@@ -1,16 +1,19 @@
 package com.mgijon.baseapp.base
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
+import com.mgijon.baseapp.R
 import com.mgijon.baseapp.example.model.StateBase
 import com.mgijon.baseapp.example.model.TitleFragmentType
 
@@ -60,7 +63,7 @@ abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatAct
                 }
                 it.error?.isError == true -> {
                     hideProgress()
-                    onError?.invoke() ?: kotlin.run { showGenericErrorFragment() }
+                    onError?.invoke() ?: kotlin.run { showGenericError(it.error.message) }
                 }
                 else -> {
                     hideProgress()
@@ -78,8 +81,12 @@ abstract class BaseFragment<V : BaseViewModel, B : ViewBinding, A : AppCompatAct
         (activity as BaseActivity<*>).loading(true)
     }
 
-    private fun showGenericErrorFragment() {
-        //TODO
+    private fun showGenericError(message: String?) {
+        AlertDialog.Builder(requireContext()).apply {
+            setMessage(message ?: getString(R.string.body_generic_message_error))
+            setTitle(getString(R.string.title_message_error))
+            setIcon(R.drawable.ic_error)
+        }.create().show()
     }
 
     fun setTitle(string: String?) {
