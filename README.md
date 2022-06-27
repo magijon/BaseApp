@@ -111,11 +111,21 @@ The images come from the hand of **Glide**. And as mentioned before, using the N
 The app has tested the viewmodels, the usecase and the repository. For them, Mockito and Junit have been used.  In addition to the tools provided by **nhaarman** that make it very easy to use mocked objects. The **coverage** in all tested classes is 100%. And through doing 'collect' in the responses of **flow** we are making the different assertions and call verifications.
 As a detail within the test, in order to operate in the same **CorountineScope** as the viewmodel, the dispatcher is injected from a **Hilt** module, so we can put the one we want when creating our fake viewmodel.
 
-### Other Explanations
+
+## Error Control
 
 A basic error control has been created that could be extended by each function that uses it, with a default dialog when we cannot access the information. Since there are different types of errors returned by the repository, we can create a process that distinguishes each returned object and displays a custom message for each response.
 
+## Controls and Tools
+
 A component called **RecyclerViewWithSearchBar** has been developed, which can be used anywhere in the app and allows the possibility of passing a series of functions to it for each available event, such as going to the top of the list, moving by it, or by pressing any button on the search bar. The component frees the view from such control, simplifying the use of it to the simplest functions.
+
+The transformation between models has been developed using the Kotlin extensions, so we can make direct use of these functions from the same object.
+
+With the use of base classes for both views and viewmodels we can unify common functions that could be used in classes that are inherited, such as the treatment of the responses of a call and forgetting to deal with basic errors that can be repeated over time. throughout the app, or the control of visual loading elements for the user.
+
+
+### Other Explanations
 
 Add that the app doesn't really delete the references, but it changes the state from visble to invisble within the database and every time the list of characters is supplied, it is filtered by visible.
 
