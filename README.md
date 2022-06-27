@@ -127,7 +127,7 @@ With the use of base classes for both views and viewmodels we can unify common f
 
 ### Other Explanations
 
-As for access to the api, a public and a private key are necessary; To simplify the test of the app, a Constants.kt class is included that contains some managed by the developer. Ideally, due to security requirements, it would be that these keys were written as a **buildConfig** inside the gradle, for example in ** release** and thus allow each app tester to manage their own user within the Marvel website; but as described, to simplify testing it has been left in this class.
+As for access to the api, a public and a private key are necessary; To simplify the test of the app, a Constants.kt class is included that contains some managed by the developer. Ideally, due to security requirements, it would be that these keys were written as a **buildConfig** inside the gradle, for example in **release** and thus allow each app tester to manage their own user within the Marvel website; but as described, to simplify testing it has been left in this class.
 
 Add that the app doesn't really delete the references, but it changes the state from visble to invisble within the database and every time the list of characters is supplied, it is filtered by visible.
 
