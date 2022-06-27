@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="RecyclerViewWithSearchCustom">
+        <attr name="openDuration" format="integer" />
+        <attr name="closeDuration" format="integer" />
+    </declare-styleable>
+
+</resources>
